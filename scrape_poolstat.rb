@@ -5,26 +5,43 @@
 # The finals URL is derived automatically by substituting "matches" for "finals".
 # The output filename defaults to the URL slug (e.g. 2026_kings_cup.csv).
 #
-# Usage: ruby scrape_poolstat.rb <matches-url> [output.csv]
-# Example: ruby scrape_poolstat.rb https://www.poolstat.net.au/acteba/matches/8348/2026-kings-cup
+# Usage (single):   ruby scrape_poolstat.rb <matches-url> [output.csv]
+# Usage (bulk):     ruby scrape_poolstat.rb --file <urls.txt>
+#
+# The URL file should contain one matches URL per line; blank lines and lines
+# starting with # are ignored. Each URL writes its own slug-named output file.
 
 require 'net/http'
 require 'uri'
 require 'csv'
 require 'date'
 
-matches_url = ARGV[0]
-abort "Usage: ruby scrape_poolstat.rb <matches-url> [output.csv]" unless matches_url
-abort "Expected a URL containing '/matches/'" unless matches_url.include?('/matches/')
+USAGE = "Usage: ruby scrape_poolstat.rb <matches-url> [output.csv]\n" \
+        "       ruby scrape_poolstat.rb --file <urls.txt>"
 
-finals_url = matches_url.sub('/matches/', '/finals/')
-slug       = matches_url.split('/').last          # e.g. "2026-kings-cup"
-output     = ARGV[1] || "#{slug.tr('-', '_')}.csv"
+if ARGV.include?('--file')
+  file_arg = ARGV[ARGV.index('--file') + 1]
+  abort USAGE unless file_arg
+  abort "File not found: #{file_arg}" unless File.exist?(file_arg)
+  urls = File.readlines(file_arg, chomp: true)
+              .map(&:strip)
+              .reject { |l| l.empty? || l.start_with?('#') }
+  abort "No URLs found in #{file_arg}" if urls.empty?
+  urls_with_outputs = urls.map do |url|
+    slug = url.split('/').last
+    [url, "#{slug.tr('-', '_')}.csv"]
+  end
+else
+  abort USAGE unless ARGV[0]
+  abort "Expected a URL containing '/matches/'" unless ARGV[0].include?('/matches/')
+  slug = ARGV[0].split('/').last
+  urls_with_outputs = [[ARGV[0], ARGV[1] || "#{slug.tr('-', '_')}.csv"]]
+end
 
-def scrape(url)
+def scrape(url, silent: false)
   response = Net::HTTP.get_response(URI(url))
   unless response.is_a?(Net::HTTPSuccess)
-    warn "  HTTP #{response.code} from #{url} — skipping"
+    warn "  HTTP #{response.code} from #{url} — skipping" unless silent
     return []
   end
   html = response.body
@@ -81,23 +98,29 @@ rescue => e
   []
 end
 
-puts "Fetching rounds:  #{matches_url}"
-rows = scrape(matches_url)
-abort "No matches found — check the URL or page structure" if rows.empty?
-puts "  #{rows.size} matches found"
+urls_with_outputs.each do |matches_url, output|
+  abort "Expected a URL containing '/matches/': #{matches_url}" unless matches_url.include?('/matches/')
+  finals_url = matches_url.sub('/matches/', '/finals/')
 
-puts "Fetching finals:  #{finals_url}"
-finals_rows = scrape(finals_url)
-if finals_rows.empty?
-  warn "  No finals matches found — continuing without"
-else
-  puts "  #{finals_rows.size} matches found"
-  rows += finals_rows
+  puts "\n#{output}"
+  puts "  Fetching rounds: #{matches_url}"
+  rows = scrape(matches_url)
+  if rows.empty?
+    warn "  No matches found — skipping"
+    next
+  end
+  puts "  #{rows.size} matches found"
+
+  puts "  Fetching finals: #{finals_url}"
+  finals_rows = scrape(finals_url, silent: true)
+  unless finals_rows.empty?
+    puts "  #{finals_rows.size} matches found"
+    rows += finals_rows
+  end
+
+  CSV.open(output, 'w') do |csv|
+    csv << %w[date player_a player_b score_a score_b]
+    rows.each { |row| csv << row }
+  end
+  puts "  Wrote #{rows.size} matches to #{output}"
 end
-
-CSV.open(output, 'w') do |csv|
-  csv << %w[date player_a player_b score_a score_b]
-  rows.each { |row| csv << row }
-end
-
-puts "Wrote #{rows.size} matches to #{output}"
