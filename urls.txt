@@ -2,4 +2,32 @@
 # One matches URL per line — finals are fetched automatically.
 # Blank lines and lines starting with # are ignored.
 
+# Kings Cup
+https://www.poolstat.net.au/ACTEBA/matches/4268/2023-kings-cup-open-grade
+https://www.poolstat.net.au/ACTEBA/matches/5387/2024-kings-cup
+https://www.poolstat.net.au/ACTEBA/matches/6707/2025-kings-cup
 https://www.poolstat.net.au/acteba/matches/8348/2026-kings-cup
+
+# Killer Crossover
+https://www.poolstat.net.au/KILLERX/matches/5667/2024-killer-crossover-open-grade
+https://www.poolstat.net.au/KILLERX/matches/7000/2025-killer-crossover-open-grade
+
+# AEBF Plate
+https://www.poolstat.net.au/AEBF/matches/7335/2025-aebf-plate-open-grade
+https://www.poolstat.net.au/AEBF/matches/5794/2024-aebf-plate-open-grade
+https://www.poolstat.net.au/aebf/matches/4638/2023-aebf-plate-open-grade
+
+# AEBF Singles
+https://www.poolstat.net.au/AEBF/matches/7328/2025-australian-singles-open-grade
+https://www.poolstat.net.au/AEBF/matches/5800/2024-australian-singles-open-grade
+https://www.poolstat.net.au/aebf/matches/4625/2023-australian-singles-open-grade
+
+# TODO - Figure out AEBF Teams
+
+# Darwin Open
+https://www.poolstat.net.au/DARWIN/matches/4188/2023-darwin-open-tournament
+https://www.poolstat.net.au/DARWIN/matches/5311/2024-darwin-open-open-grade
+https://www.poolstat.net.au/DARWIN/matches/6542/2025-darwin-open-open-grade
+https://www.poolstat.net.au/DARWIN/matches/6549/2025-darwin-open-finals-open-grade
+https://www.poolstat.net.au/DARWIN/matches/8166/2026-darwin-open-open-grade
+https://www.poolstat.net.au/DARWIN/matches/8167/2026-darwin-open-finals-open-grade

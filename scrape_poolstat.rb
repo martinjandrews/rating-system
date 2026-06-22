@@ -2,6 +2,14 @@
 # Scrapes match results from a poolstat.net.au matches page and its corresponding
 # finals page, combining both into a single CSV suitable for load_matches.rb.
 #
+# For individual competitions (most events), the frame scores are read directly
+# from the matches/finals pages.
+#
+# For team competitions (where teams play each other and individual player
+# match-ups are on separate scoresheet pages), the script detects the format,
+# collects all scoresheet URLs from the main page, then fetches and parses each
+# scoresheet to extract individual player vs player frame results.
+#
 # The finals URL is derived automatically by substituting "matches" for "finals".
 # The output filename defaults to the URL slug (e.g. 2026_kings_cup.csv).
 #
@@ -42,35 +50,59 @@ else
   urls_with_outputs = [[ARGV[0], ARGV[1] || File.join(RESULTS_DIR, "#{slug.tr('-', '_')}.csv")]]
 end
 
-def scrape(url, silent: false)
+# ---------------------------------------------------------------------------- helpers
+
+def fetch_html(url, silent: false)
   response = Net::HTTP.get_response(URI(url))
   unless response.is_a?(Net::HTTPSuccess)
     warn "  HTTP #{response.code} from #{url} — skipping" unless silent
-    return []
+    return nil
   end
-  html = response.body
+  response.body
+rescue => e
+  warn "  Error fetching #{url}: #{e.message} — skipping" unless silent
+  nil
+end
 
-  # Collect date captions and their byte positions so we can assign each match
-  # to the round date that precedes it in the document.
-  # Captions vary by competition, e.g.:
-  #   "DD-MM-YYYY - Round N"                (Kings Cup)
-  #   "DD-MM-YYYY - Main - Round N"         (Killer Crossover)
-  #   "DD-MM-YYYY - Repechage - Round N"    (Killer Crossover)
-  #   "DD-MM-YYYY - Grand Final Round N"    (finals pages)
-  date_positions = []
+# Returns [[byte_offset, 'YYYY-MM-DD'], ...] for every round/date caption in html.
+# Handles caption formats like:
+#   "DD-MM-YYYY - Round N"
+#   "DD-MM-YYYY - Main - Round N"
+#   "DD-MM-YYYY - Grand Final Round N"
+def extract_date_positions(html)
+  positions = []
   html.scan(/(\d{2}-\d{2}-\d{4}) - (?:[^<]*?)(?:Round|Grand Final)/) do
-    date_positions << [
+    positions << [
       Regexp.last_match.begin(0),
       Date.strptime(Regexp.last_match(1), '%d-%m-%Y').strftime('%Y-%m-%d')
     ]
   end
+  positions
+end
 
+# Given a byte position and the list of date positions, returns the date whose
+# caption immediately precedes pos.
+def date_at(pos, date_positions)
+  date_positions.select { |dpos, _| dpos < pos }.last&.last
+end
+
+# ---------------------------------------------------------------------------- format detection
+
+# Team competitions have /team-stats/ links in the hometeam cells.
+def teams_competition?(html)
+  html.include?('/team-stats/')
+end
+
+# ---------------------------------------------------------------------------- individual competitions
+
+def scrape_individuals(html)
+  date_positions = extract_date_positions(html)
   rows = []
 
   # Each played match has three consecutive tds: hometeam | score | awayteam.
-  # Scores look like: <span class="csc-score-3">0 (3)</span>:<span ...>(8) 1</span>
-  # The number in parens is the frame count; we ignore the match-level 0/1 outside.
-  # Finals pages use <span class="csc-score-">11</span> — raw number, no parens.
+  # Scores look like: <span class="csc-score-3">0 (8)</span>:<span ...>(6) 1</span>
+  # The number in parens is the frame count; the outside 0/1 is the match result.
+  # Finals pages use <span class="csc-score-">11</span> — raw frame count, no parens.
   pattern = /
     <td[^>]*hometeam[^>]*>(.*?)<\/td>
     \s*
@@ -96,15 +128,98 @@ def scrape(url, silent: false)
     away = away_html.gsub(/<[^>]+>/, '').strip
     next if home.empty? || away.empty?
 
-    date = date_positions.select { |pos, _| pos < match_pos }.last&.last
-    rows << [date, home, away, home_frames, away_frames]
+    rows << [date_at(match_pos, date_positions), home, away, home_frames, away_frames]
   end
 
   rows
-rescue => e
-  warn "  Error fetching #{url}: #{e.message} — skipping"
-  []
 end
+
+# ---------------------------------------------------------------------------- team competitions
+
+def scrape_teams(html, base_url)
+  date_positions = extract_date_positions(html)
+
+  # Collect unique scoresheet paths and their positions in the document (for
+  # date assignment). The first occurrence of each path determines the date.
+  seen = {}
+  scoresheet_refs = []
+  html.scan(/href="(\/[^"]*scoresheet\/\d+\/[^"]+)"/) do
+    path = Regexp.last_match(1)
+    pos  = Regexp.last_match.begin(0)
+    next if seen[path]
+    seen[path] = true
+    scoresheet_refs << [path, date_at(pos, date_positions)]
+  end
+
+  return [] if scoresheet_refs.empty?
+
+  warn "  Found #{scoresheet_refs.size} team scoresheets"
+  rows = []
+
+  scoresheet_refs.each_with_index do |(path, date), i|
+    scoresheet_html = fetch_html("#{base_url}#{path}", silent: true)
+    unless scoresheet_html
+      warn "  Scoresheet #{i + 1}/#{scoresheet_refs.size}: fetch failed — #{path}"
+      next
+    end
+    sheet_rows = parse_scoresheet(scoresheet_html, date)
+    label = path.split('/').last
+    warn "  Scoresheet #{i + 1}/#{scoresheet_refs.size}: #{sheet_rows.size} frames — #{label}"
+    rows += sheet_rows
+  end
+
+  rows
+end
+
+# Extracts individual player frame results from a team scoresheet page.
+# Only processes "Singles #N" tables — the "Legend" summary table is skipped.
+# Each row in a Singles table is one frame: home player wins (1-0) or loses (0-1).
+def parse_scoresheet(html, date)
+  rows = []
+
+  # Split by <table class="table-results"> blocks, keeping only Singles tables.
+  html.scan(/<table[^>]*class="table-results"[^>]*>(.*?)<\/table>/m) do |table_match|
+    table = table_match[0]
+    next unless table.match?(/<caption[^>]*>\s*Singles/i)
+
+    # Each row: home player (tdl + player_N class) | home score (tdc + rb, 0 or 1)
+    #           | away score (tdc, 0 or 1) | away player (tdr + player_N class)
+    #
+    # The Legend table has "N - N" style scores so those rows don't match (0|1).
+    table.scan(/
+      <td[^>]*\btdl\b[^>]*\bplayer_\d+\b[^>]*>.*?<a[^>]*>(.*?)<\/a>.*?<\/td>
+      .*?
+      <td[^>]*\btdc\b[^>]*\brb\b[^>]*>\s*(0|1)\s*<\/td>
+      [^<]*
+      <td[^>]*\btdc\b[^>]*>\s*(0|1)\s*<\/td>
+      .*?
+      <td[^>]*\btdr\b[^>]*\bplayer_\d+\b[^>]*>.*?<a[^>]*>(.*?)<\/a>
+    /xm) do |home, home_score, away_score, away|
+      home = home.strip
+      away = away.strip
+      next if home.empty? || away.empty?
+      rows << [date, home, away, home_score.to_i, away_score.to_i]
+    end
+  end
+
+  rows
+end
+
+# ---------------------------------------------------------------------------- main scrape entry point
+
+def scrape(url, silent: false)
+  html = fetch_html(url, silent: silent)
+  return [] unless html
+
+  if teams_competition?(html)
+    uri = URI(url)
+    scrape_teams(html, "#{uri.scheme}://#{uri.host}")
+  else
+    scrape_individuals(html)
+  end
+end
+
+# ---------------------------------------------------------------------------- per-URL processing
 
 urls_with_outputs.each do |matches_url, output|
   abort "Expected a URL containing '/matches/': #{matches_url}" unless matches_url.include?('/matches/')
