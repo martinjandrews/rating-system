@@ -51,12 +51,13 @@ class RatingEngine
 
   # ---------------------------------------------------------------- rating
 
-  def recompute_ratings(ridge_lambda: 1.0)
+  def recompute_ratings(ridge_lambda: 1.0, compute_uncertainty: true)
     result = BradleyTerry.fit_ratings(
       all_frame_rows,
-      baseline:     @baseline,
-      scale:        @scale,
-      ridge_lambda: ridge_lambda
+      baseline:             @baseline,
+      scale:                @scale,
+      ridge_lambda:         ridge_lambda,
+      compute_uncertainty:  compute_uncertainty
     )
     result.ratings.each do |pid, rating|
       @players[pid].rating           = rating
@@ -94,9 +95,17 @@ class RatingEngine
   end
 
   def print_ratings
-    printf "%-20s %10s %8s %8s\n", "Player", "Rating", "+/-", "Games"
-    leaderboard.each do |p|
-      printf "%-20s %10.1f %8.1f %8d\n", p.name, p.rating, p.rating_deviation, p.games_played
+    show_uncertainty = @players.values.any? { |p| !p.rating_deviation.nan? rescue false }
+    if show_uncertainty
+      printf "%-20s %10s %8s %8s\n", "Player", "Rating", "+/-", "Games"
+      leaderboard.each do |p|
+        printf "%-20s %10.1f %8.1f %8d\n", p.name, p.rating, p.rating_deviation, p.games_played
+      end
+    else
+      printf "%-20s %10s %8s\n", "Player", "Rating", "Games"
+      leaderboard.each do |p|
+        printf "%-20s %10.1f %8d\n", p.name, p.rating, p.games_played
+      end
     end
   end
 

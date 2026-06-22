@@ -1,11 +1,13 @@
 #!/usr/bin/env ruby
-# Usage: ruby load_matches.rb matches.csv [--save ratings.json]
+# Usage: ruby load_matches.rb matches.csv [--save ratings.json] [--fast]
+# --fast skips uncertainty (+/-) calculation, much quicker for large datasets
 
 require 'csv'
 require_relative 'lib/rating_engine'
 
 csv_path  = ARGV[0]
 save_path = ARGV[ARGV.index('--save') + 1] if ARGV.include?('--save')
+fast_mode = ARGV.include?('--fast')
 
 abort "Usage: ruby load_matches.rb matches.csv [--save ratings.json]" unless csv_path
 abort "File not found: #{csv_path}" unless File.exist?(csv_path)
@@ -13,12 +15,29 @@ abort "File not found: #{csv_path}" unless File.exist?(csv_path)
 engine     = RatingEngine.new(baseline: 500.0)
 player_ids = {}  # name -> id
 
+# Load alias map (alias → canonical) from aliases.csv if present.
+# Add rows to that file to merge players whose names vary across competitions.
+aliases_path = File.join(__dir__, 'aliases.csv')
+alias_map = {}
+if File.exist?(aliases_path)
+  CSV.foreach(aliases_path, headers: true) do |row|
+    canonical = row['canonical']&.strip
+    aliased   = row['alias']&.strip
+    alias_map[aliased] = canonical if canonical && aliased
+  end
+  puts "Loaded #{alias_map.size} player aliases" unless alias_map.empty?
+end
+
+def resolve(name, alias_map)
+  alias_map[name] || name
+end
+
 rows_loaded = 0
 skipped     = 0
 
 CSV.foreach(csv_path, headers: true) do |row|
-  player_a = row['player_a']&.strip
-  player_b = row['player_b']&.strip
+  player_a = resolve(row['player_a']&.strip, alias_map)
+  player_b = resolve(row['player_b']&.strip, alias_map)
   score_a  = row['score_a']&.strip&.to_i
   score_b  = row['score_b']&.strip&.to_i
 
@@ -54,7 +73,7 @@ end
 
 abort "No valid match rows found in #{csv_path}" if rows_loaded == 0
 
-engine.recompute_ratings
+engine.recompute_ratings(compute_uncertainty: !fast_mode)
 
 puts "=== Ratings (#{rows_loaded} matches, #{engine.players.size} players) ==="
 engine.print_ratings

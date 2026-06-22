@@ -42,7 +42,8 @@ module BradleyTerry
     scale: SCALE_S,
     ridge_lambda: 1.0,
     max_iter: 100,
-    tol: 1e-8
+    tol: 1e-8,
+    compute_uncertainty: true
   )
     return FitResult.new({}, {}, {}) if frame_rows.empty?
 
@@ -60,44 +61,36 @@ module BradleyTerry
       games_played[b_id] += 1
     end
 
-    m = obs.size
-
-    # Design matrix X (m x n): +1 for player_a column, -1 for player_b column.
-    x = Array.new(m) { Array.new(n, 0.0) }
-    y = Array.new(m, 0.0)
-    obs.each_with_index do |o, k|
-      x[k][o.a_idx] += 1.0
-      x[k][o.b_idx] -= 1.0
-      y[k]           = o.a_won
-    end
-
-    reg  = Array.new(n, ridge_lambda)
-    beta = Array.new(n, 0.0)
+    reg   = Array.new(n, ridge_lambda)
+    beta  = Array.new(n, 0.0)
     h_mat = Array.new(n) { Array.new(n, 0.0) }
 
+    # Each frame has exactly two non-zero entries in X (+1 for a, -1 for b),
+    # so we update grad and H directly from observation pairs — O(m) per
+    # iteration instead of the O(m·n²) dense loop.
     max_iter.times do
-      z = x.map { |row| dot(row, beta) }
-      p = z.map { |zi| sigmoid(zi) }
-      w = p.map { |pi| [pi * (1.0 - pi), 1e-6].max }
-
-      residual = y.zip(p).map { |yi, pi| yi - pi }
-
-      grad = Array.new(n, 0.0)
-      x.each_with_index do |row, k|
-        r = residual[k]
-        row.each_with_index { |xki, j| grad[j] += xki * r }
-      end
-      n.times { |j| grad[j] -= reg[j] * beta[j] }
-
-      # H = -(X^T W X) - diag(reg)
+      grad  = Array.new(n, 0.0)
       h_mat = Array.new(n) { Array.new(n, 0.0) }
-      x.each_with_index do |row, k|
-        wk = w[k]
-        n.times do |i|
-          n.times { |j| h_mat[i][j] -= row[i] * wk * row[j] }
-        end
+
+      obs.each do |o|
+        eta = beta[o.a_idx] - beta[o.b_idx]
+        p_k = sigmoid(eta)
+        w_k = [p_k * (1.0 - p_k), 1e-6].max
+        r   = o.a_won - p_k
+
+        grad[o.a_idx] += r
+        grad[o.b_idx] -= r
+
+        h_mat[o.a_idx][o.a_idx] -= w_k
+        h_mat[o.a_idx][o.b_idx] += w_k
+        h_mat[o.b_idx][o.a_idx] += w_k
+        h_mat[o.b_idx][o.b_idx] -= w_k
       end
-      n.times { |i| h_mat[i][i] -= reg[i] }
+
+      n.times do |j|
+        grad[j]      -= reg[j] * beta[j]
+        h_mat[j][j]  -= reg[j]
+      end
 
       step = mat_solve(h_mat, grad)
       break if step.nil?
@@ -116,17 +109,21 @@ module BradleyTerry
     player_ids.each { |pid| ratings[pid] = theta_to_rating(thetas[idx_of[pid]], baseline, scale) }
 
     # Approximate per-player standard error from diagonal of inverse Hessian.
+    # Skipped when compute_uncertainty: false — mat_inv is O(n³) and slow for
+    # large player pools.
     rating_deviation = {}
-    begin
-      neg_h = h_mat.map { |row| row.map { |v| -v } }
-      cov   = mat_inv(neg_h)
-      player_ids.each do |pid|
-        i = idx_of[pid]
-        se_theta = Math.sqrt([cov[i][i], 0.0].max)
-        rating_deviation[pid] = se_theta * scale / LN10
+    if compute_uncertainty
+      begin
+        neg_h = h_mat.map { |row| row.map { |v| -v } }
+        cov   = mat_inv(neg_h)
+        player_ids.each do |pid|
+          i = idx_of[pid]
+          se_theta = Math.sqrt([cov[i][i], 0.0].max)
+          rating_deviation[pid] = se_theta * scale / LN10
+        end
+      rescue
+        player_ids.each { |pid| rating_deviation[pid] = Float::NAN }
       end
-    rescue
-      player_ids.each { |pid| rating_deviation[pid] = Float::NAN }
     end
 
     FitResult.new(ratings, rating_deviation, games_played)
