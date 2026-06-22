@@ -160,6 +160,13 @@ def scrape_knockout(html)
     scores[cell_id] = score.to_i
   end
 
+  # Dates per match code come from the embedded dataDraws JSON blob.
+  # Format: "CODE":["CODE","...","...","YYYY-MM-DD",...]
+  dates = {}
+  html.scan(/"(\d+)":\["[^"]*","[^"]*","[^"]*","(\d{4}-\d{2}-\d{2})"/) do |code, date|
+    dates[code] = date
+  end
+
   # Pair up by match code; skip unplayed matches (both scores 0 or player missing)
   codes = players.keys.map { |k| k[/cell_(\d+)_/, 1] }.uniq.sort_by(&:to_i)
   rows  = []
@@ -169,8 +176,7 @@ def scrape_knockout(html)
     next unless players[h_id] && players[a_id]
     next unless scores[h_id] && scores[a_id]
     next if scores[h_id] == 0 && scores[a_id] == 0
-    # Knockout pages have no date information
-    rows << [nil, players[h_id], players[a_id], scores[h_id], scores[a_id]]
+    rows << [dates[code], players[h_id], players[a_id], scores[h_id], scores[a_id]]
   end
   rows
 end
