@@ -71,7 +71,7 @@ end
 #   "DD-MM-YYYY - Grand Final Round N"
 def extract_date_positions(html)
   positions = []
-  html.scan(/(\d{2}-\d{2}-\d{4}) - (?:[^<]*?)(?:Round|Grand Final)/) do
+  html.scan(/(\d{2}-\d{2}-\d{4}) - (?:[^<]*?)(?:Round|\w+ Final)/) do
     positions << [
       Regexp.last_match.begin(0),
       Date.strptime(Regexp.last_match(1), '%d-%m-%Y').strftime('%Y-%m-%d')
