@@ -114,7 +114,7 @@ urls_with_outputs.each do |matches_url, output|
   puts "  Fetching rounds: #{matches_url}"
   rows = scrape(matches_url)
   if rows.empty?
-    warn "  No matches found — skipping"
+    warn "  No match scores — ignoring"
     next
   end
   puts "  #{rows.size} matches found"
