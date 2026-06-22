@@ -10,14 +10,14 @@ def main
   engine = RatingEngine.new(baseline: 500.0)
 
   true_ratings = {
-    "Alice" => 650.0,
-    "Bob"   => 550.0,
-    "Carol" => 500.0,
-    "Dave"  => 420.0
+    "Alice Smith"  => 650.0,
+    "Bob Jones"    => 550.0,
+    "Carol Davis"  => 500.0,
+    "Dave Wilson"  => 420.0
   }
   scale = engine.scale
 
-  ids   = true_ratings.keys.each_with_object({}) { |name, h| h[name] = engine.add_player(name) }
+  ids   = true_ratings.keys.each_with_object({}) { |name, h| h[name] = engine.add_player(*name.split(' ', 2)) }
   names = true_ratings.keys
 
   60.times do
@@ -51,8 +51,8 @@ def main
   printf "Win odds for a 100-point favourite: %.3f (target: 2.000)\n", odds_100
 
   puts "\n=== Single-frame prediction: Alice vs Dave ==="
-  a_id = ids["Alice"]
-  d_id = ids["Dave"]
+  a_id = ids["Alice Smith"]
+  d_id = ids["Dave Wilson"]
   printf "P(Alice wins frame) = %.3f\n", engine.predict(a_id, d_id)
 
   puts "\n=== Match prediction: Alice vs Dave, race to 5 ==="

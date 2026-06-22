@@ -40,8 +40,8 @@ CSV.foreach(csv_path, headers: true) do |row|
     next
   end
 
-  [player_a, player_b].each do |name|
-    player_ids[name] ||= engine.add_player(name)
+  [player_a, player_b].each do |full_name|
+    player_ids[full_name] ||= engine.add_player(*full_name.split(' ', 2))
   end
 
   a_id   = player_ids[player_a]

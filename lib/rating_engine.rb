@@ -17,9 +17,9 @@ class RatingEngine
 
   # ---------------------------------------------------------------- players
 
-  def add_player(name)
+  def add_player(first_name, last_name = '')
     pid = IdCounters.next_player_id
-    @players[pid] = Player.new(id: pid, name: name, rating: @baseline)
+    @players[pid] = Player.new(id: pid, first_name: first_name, last_name: last_name, rating: @baseline)
     pid
   end
 
@@ -121,8 +121,8 @@ class RatingEngine
 
     data[:players].each do |pd|
       p = Player.new(
-        id: pd[:id], name: pd[:name], rating: pd[:rating],
-        rating_deviation: pd[:rating_deviation], games_played: pd[:games_played]
+        id: pd[:id], first_name: pd[:first_name], last_name: pd[:last_name] || '',
+        rating: pd[:rating], rating_deviation: pd[:rating_deviation], games_played: pd[:games_played]
       )
       engine.players[p.id] = p
     end
