@@ -31,6 +31,12 @@ FileUtils.mkdir_p(RESULTS_DIR)
 USAGE = "Usage: ruby scrape_poolstat.rb <matches-url> [output.csv]\n" \
         "       ruby scrape_poolstat.rb --file <urls.txt>"
 
+SUPPORTED_SEGMENTS = %w[/matches/ /knockout/].freeze
+
+def supported_url?(url)
+  SUPPORTED_SEGMENTS.any? { |seg| url.include?(seg) }
+end
+
 if ARGV.include?('--file')
   file_arg = ARGV[ARGV.index('--file') + 1]
   abort USAGE unless file_arg
@@ -45,7 +51,7 @@ if ARGV.include?('--file')
   end
 else
   abort USAGE unless ARGV[0]
-  abort "Expected a URL containing '/matches/'" unless ARGV[0].include?('/matches/')
+  abort "Expected a URL containing #{SUPPORTED_SEGMENTS.join(' or ')}" unless supported_url?(ARGV[0])
   slug = ARGV[0].split('/').last
   urls_with_outputs = [[ARGV[0], ARGV[1] || File.join(RESULTS_DIR, "#{slug.tr('-', '_')}.csv")]]
 end
@@ -93,6 +99,11 @@ def teams_competition?(html)
   html.include?('/team-stats/')
 end
 
+# Knockout brackets use player/homecell + score cells keyed by cell_N_H/A IDs.
+def knockout_competition?(html)
+  html.include?('class="player homecell') && html.include?('data-id="cell_')
+end
+
 # ---------------------------------------------------------------------------- individual competitions
 
 def scrape_individuals(html)
@@ -131,6 +142,36 @@ def scrape_individuals(html)
     rows << [date_at(match_pos, date_positions), home, away, home_frames, away_frames]
   end
 
+  rows
+end
+
+# ---------------------------------------------------------------------------- knockout brackets
+
+def scrape_knockout(html)
+  # Player names are in <td id="cell_N_H/A" class="player homecell/awaycell ...">
+  players = {}
+  html.scan(/<td id="(cell_\d+_[HA])"[^>]*class="player[^"]*"[^>]*>(.*?)<\/td>/m) do |cell_id, name|
+    players[cell_id] = name.strip
+  end
+
+  # Scores are in <td class="score ..." data-id="cell_N_H/A">SCORE</td>
+  scores = {}
+  html.scan(/<td[^>]*class="score new[^"]*"[^>]*data-id="(cell_\d+_[HA])"[^>]*>(\d+)<\/td>/) do |cell_id, score|
+    scores[cell_id] = score.to_i
+  end
+
+  # Pair up by match code; skip unplayed matches (both scores 0 or player missing)
+  codes = players.keys.map { |k| k[/cell_(\d+)_/, 1] }.uniq.sort_by(&:to_i)
+  rows  = []
+  codes.each do |code|
+    h_id = "cell_#{code}_H"
+    a_id = "cell_#{code}_A"
+    next unless players[h_id] && players[a_id]
+    next unless scores[h_id] && scores[a_id]
+    next if scores[h_id] == 0 && scores[a_id] == 0
+    # Knockout pages have no date information
+    rows << [nil, players[h_id], players[a_id], scores[h_id], scores[a_id]]
+  end
   rows
 end
 
@@ -211,7 +252,9 @@ def scrape(url, silent: false)
   html = fetch_html(url, silent: silent)
   return [] unless html
 
-  if teams_competition?(html)
+  if knockout_competition?(html)
+    scrape_knockout(html)
+  elsif teams_competition?(html)
     uri = URI(url)
     scrape_teams(html, "#{uri.scheme}://#{uri.host}")
   else
@@ -221,24 +264,27 @@ end
 
 # ---------------------------------------------------------------------------- per-URL processing
 
-urls_with_outputs.each do |matches_url, output|
-  abort "Expected a URL containing '/matches/': #{matches_url}" unless matches_url.include?('/matches/')
-  finals_url = matches_url.sub('/matches/', '/finals/')
+urls_with_outputs.each do |url, output|
+  abort "Expected a URL containing #{SUPPORTED_SEGMENTS.join(' or ')}: #{url}" unless supported_url?(url)
 
   puts "\n#{output}"
-  puts "  Fetching rounds: #{matches_url}"
-  rows = scrape(matches_url)
+  puts "  Fetching: #{url}"
+  rows = scrape(url)
   if rows.empty?
     warn "  No match scores — ignoring"
     next
   end
   puts "  #{rows.size} matches found"
 
-  puts "  Fetching finals: #{finals_url}"
-  finals_rows = scrape(finals_url, silent: true)
-  unless finals_rows.empty?
-    puts "  #{finals_rows.size} matches found"
-    rows += finals_rows
+  # /matches/ pages have a companion /finals/ page; /knockout/ pages do not.
+  if url.include?('/matches/')
+    finals_url = url.sub('/matches/', '/finals/')
+    puts "  Fetching finals: #{finals_url}"
+    finals_rows = scrape(finals_url, silent: true)
+    unless finals_rows.empty?
+      puts "  #{finals_rows.size} matches found"
+      rows += finals_rows
+    end
   end
 
   CSV.open(output, 'w') do |csv|
