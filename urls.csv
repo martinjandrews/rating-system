@@ -5,42 +5,42 @@
 url,output
 
 # Kings Cup
-https://www.poolstat.net.au/ACTEBA/matches/4268/2023-kings-cup-open-grade,
-https://www.poolstat.net.au/ACTEBA/matches/5387/2024-kings-cup,
-https://www.poolstat.net.au/ACTEBA/matches/6707/2025-kings-cup,
-https://www.poolstat.net.au/acteba/matches/8348/2026-kings-cup,
+https://www.poolstat.net.au/ACTEBA/matches/4268/2023-kings-cup-open-grade,kings_cup_2023.csv
+https://www.poolstat.net.au/ACTEBA/matches/5387/2024-kings-cup,kings_cup_2024.csv
+https://www.poolstat.net.au/ACTEBA/matches/6707/2025-kings-cup,kings_cup_2025.csv
+https://www.poolstat.net.au/acteba/matches/8348/2026-kings-cup,kings_cup_2026.csv
 
 # Killer Crossover
-https://www.poolstat.net.au/KILLERX/knockout/5667/2024-killer-crossover-open-grade,
-https://www.poolstat.net.au/KILLERX/knockout/7000/2025-killer-crossover-open-grade,
+https://www.poolstat.net.au/KILLERX/knockout/5667/2024-killer-crossover-open-grade,killer_crossover_2024.csv
+https://www.poolstat.net.au/KILLERX/knockout/7000/2025-killer-crossover-open-grade,killer_crossover_2025.csv
 
 # AEBF Plate
-https://www.poolstat.net.au/AEBF/knockout/4638/2023-aebf-plate-open-grade,
-https://www.poolstat.net.au/AEBF/knockout/5794/2024-aebf-plate-open-grade,
-https://www.poolstat.net.au/AEBF/knockout/7335/2025-aebf-plate-open-grade,
+https://www.poolstat.net.au/AEBF/knockout/4638/2023-aebf-plate-open-grade,aebf_plate_2023.csv
+https://www.poolstat.net.au/AEBF/knockout/5794/2024-aebf-plate-open-grade,aebf_plate_2024.csv
+https://www.poolstat.net.au/AEBF/knockout/7335/2025-aebf-plate-open-grade,aebf_plate_2025.csv
 
 # AEBF Singles
-https://www.poolstat.net.au/AEBF/knockout/4625/2023-australian-singles-open-grade,
-https://www.poolstat.net.au/AEBF/knockout/5800/2024-australian-singles-open-grade,
-https://www.poolstat.net.au/AEBF/knockout/7328/2025-australian-singles-open-grade,
+https://www.poolstat.net.au/AEBF/knockout/4625/2023-australian-singles-open-grade,aebf_singles_2023.csv
+https://www.poolstat.net.au/AEBF/knockout/5800/2024-australian-singles-open-grade,aebf_singles_2024.csv
+https://www.poolstat.net.au/AEBF/knockout/7328/2025-australian-singles-open-grade,aebf_singles_2025.csv
 
 # AEBF Teams
-https://www.poolstat.net.au/AEBF/matches/4631/2023-australian-teams-open-grade,
-https://www.poolstat.net.au/AEBF/matches/5770/2024-australian-teams-open-grade,
-https://www.poolstat.net.au/AEBF/matches/7341/2025-australian-teams-open-grade,
+https://www.poolstat.net.au/AEBF/matches/4631/2023-australian-teams-open-grade,aebf_teams_2023.csv
+https://www.poolstat.net.au/AEBF/matches/5770/2024-australian-teams-open-grade,aebf_teams_2024.csv
+https://www.poolstat.net.au/AEBF/matches/7341/2025-australian-teams-open-grade,aebf_teams_2025.csv
 
 # Darwin Open
-https://www.poolstat.net.au/DARWIN/knockout/4188/2023-darwin-open-tournament,
-https://www.poolstat.net.au/DARWIN/knockout/5311/2024-darwin-open-open-grade,
-https://www.poolstat.net.au/DARWIN/knockout/6542/2025-darwin-open-open-grade,
-https://www.poolstat.net.au/DARWIN/knockout/6549/2025-darwin-open-finals-open-grade,
-https://www.poolstat.net.au/DARWIN/knockout/8166/2026-darwin-open-open-grade,
-https://www.poolstat.net.au/DARWIN/knockout/8167/2026-darwin-open-finals-open-grade,
+https://www.poolstat.net.au/DARWIN/knockout/4188/2023-darwin-open-tournament,darwin_open_2023.csv
+https://www.poolstat.net.au/DARWIN/knockout/5311/2024-darwin-open-open-grade,darwin_open_2024.csv
+https://www.poolstat.net.au/DARWIN/knockout/6542/2025-darwin-open-open-grade,darwin_open_2025.csv
+https://www.poolstat.net.au/DARWIN/knockout/6549/2025-darwin-open-finals-open-grade,darwin_open_finals_2025.csv
+https://www.poolstat.net.au/DARWIN/knockout/8166/2026-darwin-open-open-grade,darwin_open_2026.csv
+https://www.poolstat.net.au/DARWIN/knockout/8167/2026-darwin-open-finals-open-grade,darwin_open_final_2026.csv
 
 # Ready's Xmas Cup
-https://www.poolstat.net.au/READY/matches/4810/readys-christmas-cup-2023,
-https://www.poolstat.net.au/READY/matches/6039/readys-xmas-cup-2024-main-draw,
-https://www.poolstat.net.au/READY/matches/7443/readys-xmas-cup-2025-main-draw-open-grade,
+https://www.poolstat.net.au/READY/matches/4810/readys-christmas-cup-2023,readys_xmas_cup_2023.csv
+https://www.poolstat.net.au/READY/matches/6039/readys-xmas-cup-2024-main-draw,readys_xmas_cup_2024.csv
+https://www.poolstat.net.au/READY/matches/7443/readys-xmas-cup-2025-main-draw-open-grade,readys_xmas_cup_2025.csv
 
 # Tatts Classic
 https://www.poolstat.net.au/TATTS/knockout/3847/tatts-hotel-classic,tatts_hotel_classic_2023.csv
@@ -48,20 +48,20 @@ https://www.poolstat.net.au/tatts/knockout/4892/tatts-hotel-classic,tatts_hotel_
 https://www.poolstat.net.au/TATTS/knockout/6089/tatts-hotel-classic,tatts_hotel_classic_2025.csv
 
 # Geelong
-https://www.poolstat.net.au/GEELONG/matches/7759/geelong-open-singles-championship,
+https://www.poolstat.net.au/GEELONG/matches/7759/geelong-open-singles-championship,geelong_open_2026.csv
 
 # Albury
-https://www.poolstat.net.au/POOLVIC/matches/4034/auburywodonga-open-open-grade,
-https://www.poolstat.net.au/POOLVIC/matches/4888/auburywodonga-open,
-https://www.poolstat.net.au/POOLVIC/matches/6333/albury-open-open-grade,
-https://www.poolstat.net.au/POOLVIC/matches/7818/albury-open-grade,
+https://www.poolstat.net.au/POOLVIC/matches/4034/auburywodonga-open-open-grade,albury_2023.csv
+https://www.poolstat.net.au/POOLVIC/matches/4888/auburywodonga-open,albury_2024.csv
+https://www.poolstat.net.au/POOLVIC/matches/6333/albury-open-open-grade,albury_2025.csv
+https://www.poolstat.net.au/POOLVIC/matches/7818/albury-open-grade,albury_2026.csv
 
 # Slate Intermediate
-https://www.poolstat.net.au/SLATE/knockout/8373/2026-slate-intermediate-pool-championship,
-https://www.poolstat.net.au/SLATE/knockout/8384/2026-slate-intermediate-finals,
-https://www.poolstat.net.au/slate/knockout/6746/2025-slate-intermediate-pool-championship,
-https://www.poolstat.net.au/SLATE/knockout/5461/2024-slate-intermediate-pool-championship,
+https://www.poolstat.net.au/SLATE/knockout/8373/2026-slate-intermediate-pool-championship,slate_intermediate_2026.csv
+https://www.poolstat.net.au/SLATE/knockout/8384/2026-slate-intermediate-finals,slate_intermediate_finals_2026.csv
+https://www.poolstat.net.au/slate/knockout/6746/2025-slate-intermediate-pool-championship,slate_intermediate_2025.csv
+https://www.poolstat.net.au/SLATE/knockout/5461/2024-slate-intermediate-pool-championship,slate_intermediate_finals_2025.csv
 
 # Slate Pro
-https://www.poolstat.net.au/slate/knockout/6837/slate-pro-championship,
-https://www.poolstat.net.au/slate/knockout/6838/2025-slate-pro-championship-finals,
+https://www.poolstat.net.au/slate/knockout/6837/slate-pro-championship,slate_pro_2025.csv
+https://www.poolstat.net.au/slate/knockout/6838/2025-slate-pro-championship-finals,slate_pro_finals_2025.csv
