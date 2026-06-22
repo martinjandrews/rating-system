@@ -15,6 +15,10 @@ require 'net/http'
 require 'uri'
 require 'csv'
 require 'date'
+require 'fileutils'
+
+RESULTS_DIR = 'results'
+FileUtils.mkdir_p(RESULTS_DIR)
 
 USAGE = "Usage: ruby scrape_poolstat.rb <matches-url> [output.csv]\n" \
         "       ruby scrape_poolstat.rb --file <urls.txt>"
@@ -29,13 +33,13 @@ if ARGV.include?('--file')
   abort "No URLs found in #{file_arg}" if urls.empty?
   urls_with_outputs = urls.map do |url|
     slug = url.split('/').last
-    [url, "#{slug.tr('-', '_')}.csv"]
+    [url, File.join(RESULTS_DIR, "#{slug.tr('-', '_')}.csv")]
   end
 else
   abort USAGE unless ARGV[0]
   abort "Expected a URL containing '/matches/'" unless ARGV[0].include?('/matches/')
   slug = ARGV[0].split('/').last
-  urls_with_outputs = [[ARGV[0], ARGV[1] || "#{slug.tr('-', '_')}.csv"]]
+  urls_with_outputs = [[ARGV[0], ARGV[1] || File.join(RESULTS_DIR, "#{slug.tr('-', '_')}.csv")]]
 end
 
 def scrape(url, silent: false)
@@ -48,9 +52,13 @@ def scrape(url, silent: false)
 
   # Collect date captions and their byte positions so we can assign each match
   # to the round date that precedes it in the document.
-  # Matches pages use "DD-MM-YYYY - Round N", finals pages use "DD-MM-YYYY - Grand Final..."
+  # Captions vary by competition, e.g.:
+  #   "DD-MM-YYYY - Round N"                (Kings Cup)
+  #   "DD-MM-YYYY - Main - Round N"         (Killer Crossover)
+  #   "DD-MM-YYYY - Repechage - Round N"    (Killer Crossover)
+  #   "DD-MM-YYYY - Grand Final Round N"    (finals pages)
   date_positions = []
-  html.scan(/(\d{2}-\d{2}-\d{4}) - (?:Round|Grand Final)/) do
+  html.scan(/(\d{2}-\d{2}-\d{4}) - (?:[^<]*?)(?:Round|Grand Final)/) do
     date_positions << [
       Regexp.last_match.begin(0),
       Date.strptime(Regexp.last_match(1), '%d-%m-%Y').strftime('%Y-%m-%d')
