@@ -29,7 +29,7 @@ RESULTS_DIR = 'results'
 FileUtils.mkdir_p(RESULTS_DIR)
 
 USAGE = "Usage: ruby scrape_poolstat.rb <matches-url> [output.csv]\n" \
-        "       ruby scrape_poolstat.rb --file <urls.txt>"
+        "       ruby scrape_poolstat.rb --file <urls.csv>"
 
 SUPPORTED_SEGMENTS = %w[/matches/ /knockout/].freeze
 
@@ -41,13 +41,20 @@ if ARGV.include?('--file')
   file_arg = ARGV[ARGV.index('--file') + 1]
   abort USAGE unless file_arg
   abort "File not found: #{file_arg}" unless File.exist?(file_arg)
-  urls = File.readlines(file_arg, chomp: true)
-              .map(&:strip)
-              .reject { |l| l.empty? || l.start_with?('#') }
-  abort "No URLs found in #{file_arg}" if urls.empty?
-  urls_with_outputs = urls.map do |url|
-    slug = url.split('/').last
-    [url, File.join(RESULTS_DIR, "#{slug.tr('-', '_')}.csv")]
+
+  # Strip comment lines and blanks before CSV parsing so # comments work.
+  content = File.readlines(file_arg, chomp: true)
+                .reject { |l| l.strip.empty? || l.strip.start_with?('#') }
+                .join("\n")
+  rows = CSV.parse(content, headers: true)
+  abort "No URLs found in #{file_arg}" if rows.empty?
+
+  urls_with_outputs = rows.filter_map do |row|
+    url    = row['url']&.strip
+    next if url.nil? || url.empty?
+    output = row['output']&.strip
+    filename = output && !output.empty? ? output : "#{url.split('/').last.tr('-', '_')}.csv"
+    [url, File.join(RESULTS_DIR, filename)]
   end
 else
   abort USAGE unless ARGV[0]
