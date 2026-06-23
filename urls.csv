@@ -1,5 +1,5 @@
 # Pool competition URLs for scraping.
-# Format: url,output   (output is optional — defaults to the URL slug)
+# Format: url,output  
 # Finals pages are fetched automatically for /matches/ URLs.
 # Blank lines and lines starting with # are ignored.
 url,output

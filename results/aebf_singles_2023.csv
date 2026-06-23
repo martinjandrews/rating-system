@@ -1,79 +1,79 @@
 date,player_a,player_b,score_a,score_b
-2023-10-20,Jake McCartney (VIC),Jacob Marshall (TAS),5,3
-2023-10-20,Aaron Cedric Gonzales (WA),Sean Dempsey (VIC),2,5
-2023-10-20,Josh Hands (QLD),Kenny Nicol (ACT),5,0
-2023-10-20,Daniel Graetz (NT),Macwin Fernandes (QLD),4,5
-2023-10-20,Matt Power (ACT),Blake Rawlings (TAS),2,5
-2023-10-20,Chris Davis (NT),Nathan Jones (NSW),5,0
-2023-10-20,Danyal Porter (SA),Dean Welsh (ACT),5,3
-2023-10-20,Craig Stevens (QLD),Kris Cherry (TAS),5,1
-2023-10-20,Morgan Evans (QLD),Jakk Phillips (ACT),5,1
-2023-10-20,Kyle Thomson (QLD),Joe Watkins (TAS),5,4
-2023-10-20,Travis Martin (VIC),Scott Parker (VIC),5,1
-2023-10-20,Malachy McNeill (ACT),Brett Broderick (QLD),0,5
-2023-10-20,Paul Carlile (ACT),Dinesh Sookgreep (NSW),5,1
-2023-10-20,Stone Stenhouse (WA),Joseph Rennie (ACT),5,0
-2023-10-20,Colin Gamble (ACT),Nathan Miller (ACT),2,5
-2023-10-21,Justin Sajich (NSW),Jake McCartney (VIC),4,5
-2023-10-21,Alex Kingsbury (WA),Trai Chan (NT),5,1
-2023-10-21,Travis Crawley (NSW),Sean Dempsey (VIC),5,4
-2023-10-21,Steve Saxon (WA),Cooper Denmen (TAS),2,5
-2023-10-21,Paull Clack (VIC),Ben Crawley (NSW),5,2
-2023-10-21,Clint Kappler (WA),Brendan Kantor (QLD),5,2
-2023-10-21,Michael Scerri (VIC),Josh Hands (QLD),5,3
-2023-10-21,Gus Di Giorgio (VIC),Ben Judge (WA),5,0
-2023-10-21,Alec Evreniadis (SA),Macwin Fernandes (QLD),5,2
-2023-10-21,Justin Stubbs (TAS),Ian Hinton (SA),1,5
-2023-10-21,Brent Read (NSW),Blake Rawlings (TAS),2,5
-2023-10-21,Andy Barnett (QLD),Nick Pilat (QLD),5,0
-2023-10-21,Michael Cacciola (SA),Chris Davis (NT),5,0
-2023-10-21,Rob Bowen (VIC),Ruel Dancel (NT),5,1
-2023-10-21,Rusty Wheeler (NSW),Danyal Porter (SA),2,5
-2023-10-21,Matt Harmon (ACT),Keegan Reid (TAS),5,1
-2023-10-21,Marc Robertson (VIC),Craig Stevens (QLD),5,1
-2023-10-21,Luke Anglesey (WA),Jason Yu (NT),5,0
-2023-10-21,Chris Beagley (NT),Morgan Evans (QLD),2,5
-2023-10-21,Ben Nunan (VIC),Matthew Gartrell (NSW),4,5
-2023-10-21,Cale Barrett (TAS),Kyle Thomson (QLD),5,3
-2023-10-21,Nathan McMahon (WA),William Kossack (NT),5,2
-2023-10-21,Ben Foster (WA),Travis Martin (VIC),5,2
-2023-10-21,Barry Kitchener Jnr (NSW),Jeff Gluyas (SA),5,1
-2023-10-21,Dave Ewing (SA),Brett Broderick (QLD),5,2
-2023-10-21,Blair Kirkcaldy (TAS),Phillip Thorp (ACT),5,3
-2023-10-21,Mandar Ranganekar (WA),Paul Carlile (ACT),5,4
-2023-10-21,Greg Segal (NSW),Toby Clack (VIC),0,5
-2023-10-21,Luke Foster (WA),Stone Stenhouse (WA),3,5
-2023-10-21,Shane Smith (ACT),Simon Gray (WA),2,5
-2023-10-21,Jayden Domeika (SA),Nathan Miller (ACT),5,3
-2023-10-21,Michael Hayes (SA),Blake Marshall (TAS),5,1
-2023-10-23,Jake McCartney (VIC),Alex Kingsbury (WA),4,6
-2023-10-23,Travis Crawley (NSW),Cooper Denmen (TAS),6,3
-2023-10-23,Paull Clack (VIC),Clint Kappler (WA),5,6
-2023-10-23,Michael Scerri (VIC),Gus Di Giorgio (VIC),6,0
-2023-10-23,Alec Evreniadis (SA),Ian Hinton (SA),6,5
-2023-10-23,Blake Rawlings (TAS),Andy Barnett (QLD),2,6
-2023-10-23,Michael Cacciola (SA),Rob Bowen (VIC),6,3
-2023-10-23,Danyal Porter (SA),Matt Harmon (ACT),6,3
-2023-10-23,Marc Robertson (VIC),Luke Anglesey (WA),3,6
-2023-10-23,Morgan Evans (QLD),Matthew Gartrell (NSW),6,3
-2023-10-23,Cale Barrett (TAS),Nathan McMahon (WA),6,0
-2023-10-23,Ben Foster (WA),Barry Kitchener Jnr (NSW),6,3
-2023-10-23,Dave Ewing (SA),Blair Kirkcaldy (TAS),6,2
-2023-10-23,Mandar Ranganekar (WA),Toby Clack (VIC),3,6
-2023-10-23,Stone Stenhouse (WA),Simon Gray (WA),6,4
-2023-10-23,Jayden Domeika (SA),Michael Hayes (SA),0,6
-2023-10-24,Alex Kingsbury (WA),Travis Crawley (NSW),7,6
-2023-10-24,Clint Kappler (WA),Michael Scerri (VIC),6,7
-2023-10-24,Alec Evreniadis (SA),Andy Barnett (QLD),5,7
-2023-10-24,Michael Cacciola (SA),Danyal Porter (SA),6,7
-2023-10-24,Luke Anglesey (WA),Morgan Evans (QLD),6,7
-2023-10-24,Cale Barrett (TAS),Ben Foster (WA),4,7
-2023-10-24,Dave Ewing (SA),Toby Clack (VIC),7,5
-2023-10-24,Stone Stenhouse (WA),Michael Hayes (SA),7,1
-2023-10-25,Alex Kingsbury (WA),Michael Scerri (VIC),5,8
-2023-10-25,Andy Barnett (QLD),Danyal Porter (SA),8,6
-2023-10-25,Morgan Evans (QLD),Ben Foster (WA),5,8
-2023-10-25,Dave Ewing (SA),Stone Stenhouse (WA),3,8
-2023-10-25,Michael Scerri (VIC),Andy Barnett (QLD),8,9
-2023-10-25,Ben Foster (WA),Stone Stenhouse (WA),8,9
-2023-10-27,Andy Barnett (QLD),Stone Stenhouse (WA),9,10
+2023-10-20,Jake McCartney,Jacob Marshall,5,3
+2023-10-20,Aaron Cedric Gonzales,Sean Dempsey,2,5
+2023-10-20,Josh Hands,Kenny Nicol,5,0
+2023-10-20,Daniel Graetz,Macwin Fernandes,4,5
+2023-10-20,Matt Power,Blake Rawlings,2,5
+2023-10-20,Chris Davis,Nathan Jones,5,0
+2023-10-20,Danyal Porter,Dean Welsh,5,3
+2023-10-20,Craig Stevens,Kris Cherry,5,1
+2023-10-20,Morgan Evans,Jakk Phillips,5,1
+2023-10-20,Kyle Thomson,Joe Watkins,5,4
+2023-10-20,Travis Martin,Scott Parker,5,1
+2023-10-20,Malachy McNeill,Brett Broderick,0,5
+2023-10-20,Paul Carlile,Dinesh Sookgreep,5,1
+2023-10-20,Stone Stenhouse,Joseph Rennie,5,0
+2023-10-20,Colin Gamble,Nathan Miller,2,5
+2023-10-21,Justin Sajich,Jake McCartney,4,5
+2023-10-21,Alex Kingsbury,Trai Chan,5,1
+2023-10-21,Travis Crawley,Sean Dempsey,5,4
+2023-10-21,Steve Saxon,Cooper Denmen,2,5
+2023-10-21,Paull Clack,Ben Crawley,5,2
+2023-10-21,Clint Kappler,Brendan Kantor,5,2
+2023-10-21,Michael Scerri,Josh Hands,5,3
+2023-10-21,Gus Di Giorgio,Ben Judge,5,0
+2023-10-21,Alec Evreniadis,Macwin Fernandes,5,2
+2023-10-21,Justin Stubbs,Ian Hinton,1,5
+2023-10-21,Brent Read,Blake Rawlings,2,5
+2023-10-21,Andy Barnett,Nick Pilat,5,0
+2023-10-21,Michael Cacciola,Chris Davis,5,0
+2023-10-21,Rob Bowen,Ruel Dancel,5,1
+2023-10-21,Rusty Wheeler,Danyal Porter,2,5
+2023-10-21,Matt Harmon,Keegan Reid,5,1
+2023-10-21,Marc Robertson,Craig Stevens,5,1
+2023-10-21,Luke Anglesey,Jason Yu,5,0
+2023-10-21,Chris Beagley,Morgan Evans,2,5
+2023-10-21,Ben Nunan,Matthew Gartrell,4,5
+2023-10-21,Cale Barrett,Kyle Thomson,5,3
+2023-10-21,Nathan McMahon,William Kossack,5,2
+2023-10-21,Ben Foster,Travis Martin,5,2
+2023-10-21,Barry Kitchener Jnr,Jeff Gluyas,5,1
+2023-10-21,Dave Ewing,Brett Broderick,5,2
+2023-10-21,Blair Kirkcaldy,Phillip Thorp,5,3
+2023-10-21,Mandar Ranganekar,Paul Carlile,5,4
+2023-10-21,Greg Segal,Toby Clack,0,5
+2023-10-21,Luke Foster,Stone Stenhouse,3,5
+2023-10-21,Shane Smith,Simon Gray,2,5
+2023-10-21,Jayden Domeika,Nathan Miller,5,3
+2023-10-21,Michael Hayes,Blake Marshall,5,1
+2023-10-23,Jake McCartney,Alex Kingsbury,4,6
+2023-10-23,Travis Crawley,Cooper Denmen,6,3
+2023-10-23,Paull Clack,Clint Kappler,5,6
+2023-10-23,Michael Scerri,Gus Di Giorgio,6,0
+2023-10-23,Alec Evreniadis,Ian Hinton,6,5
+2023-10-23,Blake Rawlings,Andy Barnett,2,6
+2023-10-23,Michael Cacciola,Rob Bowen,6,3
+2023-10-23,Danyal Porter,Matt Harmon,6,3
+2023-10-23,Marc Robertson,Luke Anglesey,3,6
+2023-10-23,Morgan Evans,Matthew Gartrell,6,3
+2023-10-23,Cale Barrett,Nathan McMahon,6,0
+2023-10-23,Ben Foster,Barry Kitchener Jnr,6,3
+2023-10-23,Dave Ewing,Blair Kirkcaldy,6,2
+2023-10-23,Mandar Ranganekar,Toby Clack,3,6
+2023-10-23,Stone Stenhouse,Simon Gray,6,4
+2023-10-23,Jayden Domeika,Michael Hayes,0,6
+2023-10-24,Alex Kingsbury,Travis Crawley,7,6
+2023-10-24,Clint Kappler,Michael Scerri,6,7
+2023-10-24,Alec Evreniadis,Andy Barnett,5,7
+2023-10-24,Michael Cacciola,Danyal Porter,6,7
+2023-10-24,Luke Anglesey,Morgan Evans,6,7
+2023-10-24,Cale Barrett,Ben Foster,4,7
+2023-10-24,Dave Ewing,Toby Clack,7,5
+2023-10-24,Stone Stenhouse,Michael Hayes,7,1
+2023-10-25,Alex Kingsbury,Michael Scerri,5,8
+2023-10-25,Andy Barnett,Danyal Porter,8,6
+2023-10-25,Morgan Evans,Ben Foster,5,8
+2023-10-25,Dave Ewing,Stone Stenhouse,3,8
+2023-10-25,Michael Scerri,Andy Barnett,8,9
+2023-10-25,Ben Foster,Stone Stenhouse,8,9
+2023-10-27,Andy Barnett,Stone Stenhouse,9,10
